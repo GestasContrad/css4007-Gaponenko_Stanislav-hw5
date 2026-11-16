@@ -1,0 +1,45 @@
+Scenario: S11 — Persist and recall after restart
+Part: 3
+Selected Status Profile: normal
+
+[Reset Memory Before Scenario]
+$ python helpdesk.py --reset
+Local memory storage cleared.
+
+--- Event 1: message ---
+$ python helpdesk.py --user demo-user-a --thread restart-a --profile normal --message Please remember that I prefer replies in Kazakh. My issue is Wi-Fi. I enabled it and tried reconnecting, but it still fails.
+[Session] user_id=demo-user-a | thread_id=restart-a | status_profile=normal
+User: Please remember that I prefer replies in Kazakh. My issue is Wi-Fi. I enabled it and tried reconnecting, but it still fails.
+Node visited: user_memory
+  [User Memory] preference={'preferred_language': 'Kazakh'}
+Node visited: call_model
+  [Tool Request] find_instructions({'topic': 'wifi'})
+Node visited: tools
+  [Tool Result - find_instructions] {"topic": "wifi", "instruction_id": "GUIDE-WIFI", "title": "Connect to the practice campus network", "steps": ["Check that Wi-Fi is enabled and airplane mode is off.", "Select the fictional Campus-Demo network.", "If connection fails, forget the saved network and try connecting again.", "If the problem remains, check the service status before preparing a ticket."], "source": "data/helpdesk.json"}
+Node visited: call_model
+Helpdesk: Сіздің Wi-Fi мәселеңіз бойынша мынадай нұсқауларды ұсынамын:
+
+1. Wi-Fi қосылғанына және ұшақ режимінің өшірілгеніне көз жеткізіңіз.
+2. "Campus-Demo" желісін таңдаңыз.
+3. Егер қосылу сәтсіз болса, сақталған желіні ұмытуды (forget) және қайта қосылуды байқап көріңіз.
+4. Егер мәселе шешілмесе, билет дайындамас бұрын қызметтің статусын тексеріңіз.
+
+Егер сізге қызметтің статусын тексеру қажет болса, мен оны тексеруге дайынмын.
+  [Sources Used] ['user_memory', 'data/helpdesk.json']
+  [Loop Limit Reached] False
+
+--- Event 2: restart_process (preserve_local_storage=True) ---
+[Process terminated completely. Next event launches a fresh Python process using saved storage in local-storage/.]
+
+--- Event 3: message ---
+$ python helpdesk.py --user demo-user-a --thread restart-a --profile normal --message Which problem and steps did we discuss?
+[Session] user_id=demo-user-a | thread_id=restart-a | status_profile=normal
+User: Which problem and steps did we discuss?
+Node visited: user_memory
+  [User Memory] preference={'preferred_language': 'Kazakh'}
+Node visited: call_model
+Helpdesk: Біз Wi-Fi мәселесін талқыладық. Сіз Wi-Fi-ды қосып, қайта қосылуға тырысқаныңызды айттыңыз, бірақ ол әлі де сәтсіз болып тұр. 
+
+Егер сізге қызметтің статусын тексеру қажет болса, мен оны тексеруге дайынмын.
+  [Sources Used] ['conversation_state', 'user_memory']
+  [Loop Limit Reached] False

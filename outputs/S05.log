@@ -1,0 +1,18 @@
+Scenario: S05 — Two topics after adding clarification
+Graph Variant: Updated Part 1 Graph (with clarify_problem)
+Status Profile: normal
+User ID: demo-user-a | Thread ID: s05
+Command: python part1.py (scenario S05, variant=with_clarification)
+
+User: My Wi-Fi password does not work.
+Node visited: read_request
+  State update: {"category": "both"}
+  Current state snapshot: {"message": "My Wi-Fi password does not work.", "category": "both", "reply": null}
+Node visited: clarify_problem
+  State update: {"reply": "Is the problem connecting to Wi-Fi, or recovering your account password?"}
+  Current state snapshot: {"message": "My Wi-Fi password does not work.", "category": "both", "reply": "Is the problem connecting to Wi-Fi, or recovering your account password?"}
+
+Route taken: START -> read_request -> clarify_problem -> END
+Information source: data/helpdesk.json (for help nodes) / rule-based routing
+Final Reply: Is the problem connecting to Wi-Fi, or recovering your account password?
+Loop Limit Reached: False (Part 1 graph has no tool loop)

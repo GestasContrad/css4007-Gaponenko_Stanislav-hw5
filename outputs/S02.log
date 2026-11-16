@@ -1,0 +1,18 @@
+Scenario: S02 — Case-insensitive password route
+Graph Variant: Original Part 1 Graph
+Status Profile: normal
+User ID: demo-user-a | Thread ID: s02
+Command: python part1.py (scenario S02, variant=original)
+
+User: I forgot my PASSWORD.
+Node visited: read_request
+  State update: {"category": "password"}
+  Current state snapshot: {"message": "I forgot my PASSWORD.", "category": "password", "reply": null}
+Node visited: password_help
+  State update: {"reply": "Open the practice sign-in screen and choose Forgot password. Follow the recovery instructions shown by the practice application. If recovery is unavailable, prepare a ticket describing the error. Never include a password or recovery code in a ticket."}
+  Current state snapshot: {"message": "I forgot my PASSWORD.", "category": "password", "reply": "Open the practice sign-in screen and choose Forgot password. Follow the recovery instructions shown by the practice application. If recovery is unavailable, prepare a ticket describing the error. Never include a password or recovery code in a ticket."}
+
+Route taken: START -> read_request -> password_help -> END
+Information source: data/helpdesk.json (for help nodes) / rule-based routing
+Final Reply: Open the practice sign-in screen and choose Forgot password. Follow the recovery instructions shown by the practice application. If recovery is unavailable, prepare a ticket describing the error. Never include a password or recovery code in a ticket.
+Loop Limit Reached: False (Part 1 graph has no tool loop)

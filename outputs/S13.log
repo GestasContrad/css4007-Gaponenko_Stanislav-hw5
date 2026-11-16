@@ -1,0 +1,29 @@
+Scenario: S13 — Do not share memory between users
+Part: 3
+Selected Status Profile: normal
+
+[Reset Memory Before Scenario]
+$ python helpdesk.py --reset
+Local memory storage cleared.
+
+--- Event 1: message ---
+$ python helpdesk.py --user demo-user-a --thread isolation-a --profile normal --message Please remember that I prefer replies in Kazakh. I have a Wi-Fi problem.
+[Session] user_id=demo-user-a | thread_id=isolation-a | status_profile=normal
+User: Please remember that I prefer replies in Kazakh. I have a Wi-Fi problem.
+Node visited: user_memory
+  [User Memory] preference={'preferred_language': 'Kazakh'}
+Node visited: call_model
+Helpdesk: Сіз Wi-Fi мәселесімен бетпе-бет келдіңіз. Мәселеңізді шешу үшін не істегеніңізді айтып берсеңіз, мен сізге көмек көрсете аламын.
+  [Sources Used] ['user_memory']
+  [Loop Limit Reached] False
+
+--- Event 2: message ---
+$ python helpdesk.py --user demo-user-b --thread isolation-b --profile normal --message Have I told you a preferred language or a previous problem?
+[Session] user_id=demo-user-b | thread_id=isolation-b | status_profile=normal
+User: Have I told you a preferred language or a previous problem?
+Node visited: user_memory
+  [User Memory] preference={}
+Node visited: call_model
+Helpdesk: No preferred language or previous problem has been recorded for user 'demo-user-b'.
+  [Sources Used] []
+  [Loop Limit Reached] False

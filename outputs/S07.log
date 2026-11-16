@@ -1,0 +1,22 @@
+Scenario: S07 — The same request during a Wi-Fi outage
+Part: 2
+Selected Status Profile: wifi_outage
+
+[Reset Memory Before Scenario]
+$ python helpdesk.py --reset
+Local memory storage cleared.
+
+--- Event 1: message ---
+$ python helpdesk.py --user demo-user-a --thread s07 --profile wifi_outage --message I enabled Wi-Fi and forgot the saved network, but Campus-Demo still will not connect. Check whether Wi-Fi is down. If it is operating, prepare a ticket about this problem.
+[Session] user_id=demo-user-a | thread_id=s07 | status_profile=wifi_outage
+User: I enabled Wi-Fi and forgot the saved network, but Campus-Demo still will not connect. Check whether Wi-Fi is down. If it is operating, prepare a ticket about this problem.
+Node visited: user_memory
+  [User Memory] preference={}
+Node visited: call_model
+  [Tool Request] check_service_status({'service': 'wifi'})
+Node visited: tools
+  [Tool Result - check_service_status] {"service": "wifi", "status_profile": "wifi_outage", "status": "outage", "message": "The demo Wi-Fi service is unavailable across campus. The fixture gives no repair time.", "source": "data/service_status.json"}
+Node visited: call_model
+Helpdesk: It appears that there is currently an outage with the Campus-Demo Wi-Fi service. Because of this outage, I cannot prepare a ticket for your connection issue, and no repair time is provided in the data. If you need further assistance or have any other questions, feel free to ask!
+  [Sources Used] ['data/service_status.json']
+  [Loop Limit Reached] False

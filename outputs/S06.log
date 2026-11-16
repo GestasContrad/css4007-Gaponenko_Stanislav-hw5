@@ -1,0 +1,56 @@
+Scenario: S06 — Instructions then local ticket
+Part: 2
+Selected Status Profile: normal
+
+[Reset Memory Before Scenario]
+$ python helpdesk.py --reset
+Local memory storage cleared.
+
+--- Event 1: message ---
+$ python helpdesk.py --user demo-user-a --thread s06 --profile normal --message Show me the Wi-Fi troubleshooting steps.
+[Session] user_id=demo-user-a | thread_id=s06 | status_profile=normal
+User: Show me the Wi-Fi troubleshooting steps.
+Node visited: user_memory
+  [User Memory] preference={}
+Node visited: call_model
+  [Tool Request] find_instructions({'topic': 'wifi'})
+Node visited: tools
+  [Tool Result - find_instructions] {"topic": "wifi", "instruction_id": "GUIDE-WIFI", "title": "Connect to the practice campus network", "steps": ["Check that Wi-Fi is enabled and airplane mode is off.", "Select the fictional Campus-Demo network.", "If connection fails, forget the saved network and try connecting again.", "If the problem remains, check the service status before preparing a ticket."], "source": "data/helpdesk.json"}
+Node visited: call_model
+Helpdesk: Here are the Wi-Fi troubleshooting steps for connecting to the practice campus network:
+
+1. Check that Wi-Fi is enabled and airplane mode is off.
+2. Select the fictional Campus-Demo network.
+3. If the connection fails, forget the saved network and try connecting again.
+4. If the problem remains, check the service status before preparing a ticket.
+  [Sources Used] ['data/helpdesk.json']
+  [Loop Limit Reached] False
+
+--- Event 2: message ---
+$ python helpdesk.py --user demo-user-a --thread s06 --profile normal --message I enabled Wi-Fi and forgot the saved network, but Campus-Demo still will not connect. Check whether Wi-Fi is down. If it is operating, prepare a ticket about this problem.
+[Session] user_id=demo-user-a | thread_id=s06 | status_profile=normal
+User: I enabled Wi-Fi and forgot the saved network, but Campus-Demo still will not connect. Check whether Wi-Fi is down. If it is operating, prepare a ticket about this problem.
+Node visited: user_memory
+  [User Memory] preference={}
+Node visited: call_model
+  [Tool Request] check_service_status({'service': 'wifi'})
+Node visited: tools
+  [Tool Result - check_service_status] {"service": "wifi", "status_profile": "normal", "status": "operational", "message": "The demo Wi-Fi service has no reported outage.", "source": "data/service_status.json"}
+Node visited: call_model
+  [Tool Request] prepare_ticket({'category': 'wifi', 'summary': 'Unable to connect to Campus-Demo network after enabling Wi-Fi and forgetting the saved network.', 'steps_tried': ['Enabled Wi-Fi', 'Forgot the saved network'], 'service_status': 'operational', 'reference_ids': ['GUIDE-WIFI'], 'user_id': 'demo-user-a'})
+Node visited: tools
+  [Tool Result - prepare_ticket] {"created": true, "delivery": "local draft only", "file_path": "outputs/ticket_s06_TCK-S06-E39F.json", "ticket": {"ticket_id": "TCK-S06-E39F", "status": "draft", "user_id": "demo-user-a", "thread_id": "s06", "category": "wifi", "summary": "Unable to connect to Campus-Demo network after enabling Wi-Fi and forgetting the saved network.", "steps_tried": ["Enabled Wi-Fi", "Forgot the saved network"], "service_status": "operational", "status_profile": "normal", "reference_ids": ["GUIDE-WIFI"]}}
+Node visited: call_model
+Helpdesk: I checked the Wi-Fi service status, and it is operational. I have prepared a ticket regarding your issue with connecting to the Campus-Demo network. 
+
+Here are the details of the ticket:
+
+- **Summary**: Unable to connect to Campus-Demo network after enabling Wi-Fi and forgetting the saved network.
+- **Steps Tried**: 
+  - Enabled Wi-Fi
+  - Forgot the saved network
+
+The ticket has been saved as a local draft. You can find it at the following path: **outputs/ticket_s06_TCK-S06-E39F.json**.
+  [Sources Used] ['conversation_state', 'data/service_status.json']
+  [Ticket Drafts] ['outputs/ticket_s06_TCK-S06-E39F.json']
+  [Loop Limit Reached] False

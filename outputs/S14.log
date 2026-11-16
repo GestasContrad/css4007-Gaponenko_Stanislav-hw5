@@ -1,0 +1,22 @@
+Scenario: S14 — Password recovery outage
+Part: 2
+Selected Status Profile: recovery_outage
+
+[Reset Memory Before Scenario]
+$ python helpdesk.py --reset
+Local memory storage cleared.
+
+--- Event 1: message ---
+$ python helpdesk.py --user demo-user-a --thread s14 --profile recovery_outage --message My password recovery page is unavailable. Check the service status. Is there a known problem?
+[Session] user_id=demo-user-a | thread_id=s14 | status_profile=recovery_outage
+User: My password recovery page is unavailable. Check the service status. Is there a known problem?
+Node visited: user_memory
+  [User Memory] preference={}
+Node visited: call_model
+  [Tool Request] check_service_status({'service': 'account_recovery'})
+Node visited: tools
+  [Tool Result - check_service_status] {"service": "account_recovery", "status_profile": "recovery_outage", "status": "outage", "message": "The demo account-recovery service is unavailable. The fixture gives no repair time.", "source": "data/service_status.json"}
+Node visited: call_model
+Helpdesk: The password recovery service is currently experiencing an outage. Unfortunately, there is no repair time provided for this issue. Since the service is down, I won't be able to prepare a ticket for you. If you have any other questions or need further assistance, feel free to ask!
+  [Sources Used] ['data/service_status.json']
+  [Loop Limit Reached] False

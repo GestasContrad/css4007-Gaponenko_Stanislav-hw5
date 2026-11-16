@@ -1,0 +1,32 @@
+Scenario: S12 — Preference across threads without replay
+Part: 3
+Selected Status Profile: normal
+
+[Reset Memory Before Scenario]
+$ python helpdesk.py --reset
+Local memory storage cleared.
+
+--- Event 1: message ---
+$ python helpdesk.py --user demo-user-a --thread preference-a1 --profile normal --message Please remember that I prefer replies in Kazakh. I have a Wi-Fi problem.
+[Session] user_id=demo-user-a | thread_id=preference-a1 | status_profile=normal
+User: Please remember that I prefer replies in Kazakh. I have a Wi-Fi problem.
+Node visited: user_memory
+  [User Memory] preference={'preferred_language': 'Kazakh'}
+Node visited: call_model
+Helpdesk: Сіз Wi-Fi мәселесімен бетпе-бет келдіңіз. Мәселеңізді шешу үшін не істегеніңізді айтып берсеңіз, мен сізге көмек көрсету үшін нұсқаулықтарды таба аламын.
+  [Sources Used] ['user_memory']
+  [Loop Limit Reached] False
+
+--- Event 2: restart_process (preserve_local_storage=True) ---
+[Process terminated completely. Next event launches a fresh Python process using saved storage in local-storage/.]
+
+--- Event 3: message ---
+$ python helpdesk.py --user demo-user-a --thread preference-a2 --profile normal --message Which language did I ask you to use? What can you help with?
+[Session] user_id=demo-user-a | thread_id=preference-a2 | status_profile=normal
+User: Which language did I ask you to use? What can you help with?
+Node visited: user_memory
+  [User Memory] preference={'preferred_language': 'Kazakh'}
+Node visited: call_model
+Helpdesk: Сіз менімен қазақ тілінде сөйлесуді сұрадыңыз. Мен сізге Wi-Fi мәселелерін шешу, парольді немесе есептік жазбаны қалпына келтіру бойынша нұсқаулықтар, қызметтердің күйін тексеру және жергілікті қолдау билетінің жобаларын дайындау бойынша көмектесе аламын.
+  [Sources Used] ['user_memory']
+  [Loop Limit Reached] False

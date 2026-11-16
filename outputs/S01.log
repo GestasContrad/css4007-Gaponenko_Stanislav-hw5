@@ -1,0 +1,18 @@
+Scenario: S01 — Simple Wi-Fi route
+Graph Variant: Original Part 1 Graph
+Status Profile: normal
+User ID: demo-user-a | Thread ID: s01
+Command: python part1.py (scenario S01, variant=original)
+
+User: I cannot connect to Wi-Fi.
+Node visited: read_request
+  State update: {"category": "wifi"}
+  Current state snapshot: {"message": "I cannot connect to Wi-Fi.", "category": "wifi", "reply": null}
+Node visited: wifi_help
+  State update: {"reply": "Check that Wi-Fi is enabled and airplane mode is off. Select the fictional Campus-Demo network. If connection fails, forget the saved network and try connecting again. If the problem remains, check the service status before preparing a ticket."}
+  Current state snapshot: {"message": "I cannot connect to Wi-Fi.", "category": "wifi", "reply": "Check that Wi-Fi is enabled and airplane mode is off. Select the fictional Campus-Demo network. If connection fails, forget the saved network and try connecting again. If the problem remains, check the service status before preparing a ticket."}
+
+Route taken: START -> read_request -> wifi_help -> END
+Information source: data/helpdesk.json (for help nodes) / rule-based routing
+Final Reply: Check that Wi-Fi is enabled and airplane mode is off. Select the fictional Campus-Demo network. If connection fails, forget the saved network and try connecting again. If the problem remains, check the service status before preparing a ticket.
+Loop Limit Reached: False (Part 1 graph has no tool loop)

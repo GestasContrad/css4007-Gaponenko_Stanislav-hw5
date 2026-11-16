@@ -1,0 +1,22 @@
+Scenario: S08 — Status source unavailable
+Part: 2
+Selected Status Profile: status_unavailable
+
+[Reset Memory Before Scenario]
+$ python helpdesk.py --reset
+Local memory storage cleared.
+
+--- Event 1: message ---
+$ python helpdesk.py --user demo-user-a --thread s08 --profile status_unavailable --message Check whether Wi-Fi is down. If it is operating, prepare a ticket. I already enabled Wi-Fi and reconnected, with no success.
+[Session] user_id=demo-user-a | thread_id=s08 | status_profile=status_unavailable
+User: Check whether Wi-Fi is down. If it is operating, prepare a ticket. I already enabled Wi-Fi and reconnected, with no success.
+Node visited: user_memory
+  [User Memory] preference={}
+Node visited: call_model
+  [Tool Request] check_service_status({'service': 'wifi'})
+Node visited: tools
+  [Tool Result - check_service_status] {"service": "wifi", "status_profile": "status_unavailable", "status": "unknown", "message": "The demo Wi-Fi status source is unavailable.", "source": "data/service_status.json"}
+Node visited: call_model
+Helpdesk: The status source for the Wi-Fi service is currently unavailable, so I cannot confirm whether it is operating or down. Would you like me to prepare a ticket draft noting that the status could not be checked? If so, please provide a brief summary of your problem.
+  [Sources Used] ['data/service_status.json']
+  [Loop Limit Reached] False

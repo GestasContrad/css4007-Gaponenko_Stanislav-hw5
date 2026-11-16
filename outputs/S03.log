@@ -1,0 +1,18 @@
+Scenario: S03 — Unsupported request
+Graph Variant: Original Part 1 Graph
+Status Profile: normal
+User ID: demo-user-a | Thread ID: s03
+Command: python part1.py (scenario S03, variant=original)
+
+User: My laptop screen is broken.
+Node visited: read_request
+  State update: {"category": "other"}
+  Current state snapshot: {"message": "My laptop screen is broken.", "category": "other", "reply": null}
+Node visited: other_help
+  State update: {"reply": "Are you having a problem with Wi-Fi or your password?"}
+  Current state snapshot: {"message": "My laptop screen is broken.", "category": "other", "reply": "Are you having a problem with Wi-Fi or your password?"}
+
+Route taken: START -> read_request -> other_help -> END
+Information source: data/helpdesk.json (for help nodes) / rule-based routing
+Final Reply: Are you having a problem with Wi-Fi or your password?
+Loop Limit Reached: False (Part 1 graph has no tool loop)
